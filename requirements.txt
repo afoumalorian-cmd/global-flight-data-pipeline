@@ -1,14 +1,14 @@
 # HTTP requests for external APIs
-requests
+requests==2.34.2
 
 # Data manipulation and transformation
-pandas
+pandas==3.0.5
 
 # PostgreSQL driver
-psycopg2-binary
+psycopg2-binary==2.9.12
 
 # Environment variable management
-python-dotenv
+python-dotenv==1.2.2
 
 # Testing
-pytest
+pytest==9.1.1
