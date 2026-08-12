@@ -1,0 +1,14 @@
+# HTTP requests for external APIs
+requests
+
+# Data manipulation and transformation
+pandas
+
+# PostgreSQL driver
+psycopg2-binary
+
+# Environment variable management
+python-dotenv
+
+# Testing
+pytest
