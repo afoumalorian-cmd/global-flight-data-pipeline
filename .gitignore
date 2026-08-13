@@ -42,4 +42,7 @@ data/processed/*
 
 # Keep directory structure in Git
 !data/raw/.gitkeep
-!data/processed/.gitkeep
+!data/processed/.gitkeep 
+
+# Raw downloaded datasets
+data/raw/**/*.csv
