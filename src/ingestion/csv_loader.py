@@ -36,10 +36,11 @@ def load_csv_snapshot(
     connection,
     table_name: str,
     csv_path: Path,
-    columns: list[str],
+    source_columns: list[str],
+    database_columns: list[str],
 ) -> int:
     """Load a CSV snapshot into a table in the raw schema."""
-    validate_csv_file(csv_path, columns)
+    validate_csv_file(csv_path, source_columns)
 
     logger.info("CSV validation successful: %s", csv_path.name)
 
@@ -56,7 +57,7 @@ def load_csv_snapshot(
 
             column_identifiers = sql.SQL(", ").join(
                 sql.Identifier(column)
-                for column in columns
+                for column in database_columns
             )
 
             copy_query = sql.SQL(
@@ -107,7 +108,6 @@ def load_csv_snapshot(
             ).format(table_identifier)
 
             cursor.execute(count_query)
-
             row_count = cursor.fetchone()[0]
 
     return row_count
