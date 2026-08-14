@@ -20,7 +20,8 @@ def ingest_dataset(dataset_name: str) -> None:
 
     table_name = dataset["table"]
     csv_path = dataset["file_path"]
-    columns = dataset["columns"]
+    source_columns = dataset["source_columns"]
+    database_columns = dataset["database_columns"]
 
     logger.info(
         "Starting ingestion for dataset: %s",
@@ -35,7 +36,8 @@ def ingest_dataset(dataset_name: str) -> None:
             connection=connection,
             table_name=table_name,
             csv_path=csv_path,
-            columns=columns,
+            source_columns=source_columns,
+            database_columns=database_columns,
         )
 
         logger.info(
