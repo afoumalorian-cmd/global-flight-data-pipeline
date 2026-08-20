@@ -3,8 +3,6 @@
 -- CORE -> ANALYTICS Transformation
 -- ============================================================
 
-BEGIN;
-
 -- ============================================================
 -- Refresh analytics tables
 -- ============================================================
@@ -501,6 +499,3 @@ JOIN core.countries c
 
 LEFT JOIN runway_metrics rwm
     ON rwm.airport_id = a.airport_id;
-
-
-COMMIT;
