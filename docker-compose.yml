@@ -30,8 +30,59 @@ services:
       - flight_network
 
 
+  airflow:
+    image: global-flight-airflow:3.3.1
+    container_name: global-flight-airflow
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    environment:
+      # Airflow metadata database
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/airflow
+
+      # Lightweight execution for the local project
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+
+      # Make the project modules importable from DAGs
+      PYTHONPATH: /opt/airflow/project
+
+      # Application database configuration inside Docker
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+
+      FLIGHT_API_KEY: ${FLIGHT_API_KEY}
+
+    command: standalone
+
+    ports:
+      - "8080:8080"
+
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./src:/opt/airflow/project/src
+      - ./sql:/opt/airflow/project/sql
+      - ./data:/opt/airflow/project/data
+      - ./config:/opt/airflow/project/config
+      - airflow_logs:/opt/airflow/logs
+
+    working_dir: /opt/airflow/project
+
+    restart: unless-stopped
+
+    networks:
+      - flight_network
+
+
 volumes:
   postgres_data:
+  airflow_logs:
 
 
 networks:
