@@ -47,6 +47,10 @@ services:
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
 
+      AIRFLOW__CORE__PARALLELISM: "2"
+      AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG: "2"
+      AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG: "1"
+
       # Make the project modules importable from DAGs
       PYTHONPATH: /opt/airflow/project
 
