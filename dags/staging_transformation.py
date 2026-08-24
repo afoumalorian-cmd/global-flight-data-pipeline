@@ -4,8 +4,8 @@ from zoneinfo import ZoneInfo
 from airflow.sdk import DAG
 from airflow.providers.standard.operators.python import PythonOperator
 
+from src.quality.quality_runner import run_staging_quality_checks
 from src.transform.transform_ourairports import transform_ourairports
-
 
 with DAG(
     dag_id="staging_transformation",
@@ -25,3 +25,10 @@ with DAG(
         task_id="transform_raw_to_staging",
         python_callable=transform_ourairports,
     )
+
+    validate_staging_quality = PythonOperator(
+        task_id="validate_staging_quality",
+        python_callable=run_staging_quality_checks,
+    )
+
+    transform_staging >> validate_staging_quality
