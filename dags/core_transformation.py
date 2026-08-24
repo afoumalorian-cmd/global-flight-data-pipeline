@@ -2,6 +2,7 @@ import pendulum
 
 from airflow.sdk import DAG, task
 
+from src.quality.quality_runner import run_core_quality_checks
 from src.transform.transform_core import transform_core
 
 
@@ -28,4 +29,12 @@ with DAG(
         """Execute the STAGING to CORE transformation."""
         transform_core()
 
-    run_core_transformation()
+    @task(task_id="validate_core_quality")
+    def run_core_quality_validation() -> None:
+        """Execute standalone CORE Data Quality checks."""
+        run_core_quality_checks()
+
+    transform_task = run_core_transformation()
+    quality_task = run_core_quality_validation()
+
+    transform_task >> quality_task
