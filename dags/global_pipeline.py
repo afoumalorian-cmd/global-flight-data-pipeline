@@ -6,11 +6,18 @@ from airflow.providers.standard.operators.trigger_dagrun import (
     TriggerDagRunOperator,
 )
 
+from src.monitoring.airflow_callbacks import log_task_failure
+
+
+DEFAULT_ARGS = {
+    "on_failure_callback": log_task_failure,
+}
+
 
 with DAG(
     dag_id="global_pipeline",
     description="Orchestrate the complete Global Flight Data Pipeline",
-    schedule=None,
+    schedule="0 2 * * *",
     start_date=datetime(
         2026,
         1,
@@ -18,6 +25,8 @@ with DAG(
         tzinfo=ZoneInfo("Europe/Paris"),
     ),
     catchup=False,
+    max_active_runs=1,
+    default_args=DEFAULT_ARGS,
     tags=["global-flight-data", "pipeline", "orchestration"],
 ) as dag:
 
