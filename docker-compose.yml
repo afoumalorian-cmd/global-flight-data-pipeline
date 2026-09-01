@@ -71,6 +71,7 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./src:/opt/airflow/project/src
+      - ./tests:/opt/airflow/project/tests
       - ./sql:/opt/airflow/project/sql
       - ./data:/opt/airflow/project/data
       - ./config:/opt/airflow/project/config
