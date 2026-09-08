@@ -36,7 +36,7 @@ jobs:
 
       - name: Compile project code
         run: |
-          docker exec global-flight-airflow python -m compileall -q \
+          docker exec --user root global-flight-airflow python -m compileall -q \
             /opt/airflow/dags \
             /opt/airflow/project/src \
             /opt/airflow/project/tests
