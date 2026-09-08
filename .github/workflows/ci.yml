@@ -28,8 +28,11 @@ jobs:
       - name: Validate Docker Compose configuration
         run: docker compose config --quiet
 
-      - name: Build image and start Airflow
-        run: docker compose up -d --build airflow
+      - name: Build Airflow image
+        run: docker build --tag global-flight-airflow:3.3.1 .
+
+      - name: Start Airflow
+        run: docker compose up -d airflow
 
       - name: Display running services
         run: docker compose ps
