@@ -1,0 +1,56 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Validate pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create CI environment file
+        run: cp .env.example .env
+
+      - name: Validate Docker Compose configuration
+        run: docker compose config --quiet
+
+      - name: Build image and start Airflow
+        run: docker compose up -d --build airflow
+
+      - name: Display running services
+        run: docker compose ps
+
+      - name: Compile project code
+        run: |
+          docker exec global-flight-airflow python -m compileall -q \
+            /opt/airflow/dags \
+            /opt/airflow/project/src \
+            /opt/airflow/project/tests
+
+      - name: Run automated tests
+        run: |
+          docker exec global-flight-airflow python -m pytest -q \
+            -o cache_dir=/tmp/pytest-cache \
+            /opt/airflow/project/tests
+
+      - name: Show Airflow logs on failure
+        if: failure()
+        run: docker compose logs --no-color airflow
+
+      - name: Stop services
+        if: always()
+        run: docker compose down -v --remove-orphans
